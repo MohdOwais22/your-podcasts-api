@@ -1,10 +1,7 @@
 import { asyncError } from '../middlewares/error.js';
-import {User} from '../models/user.js';
+import { User } from '../models/user.js';
 import ErrorHandler from '../utils/error.js';
-import {
-    cookieOptions,
-    sendToken,
-  } from "../utils/features.js";
+import { cookieOptions, sendToken } from '../utils/features.js';
 
 export const login = asyncError(async (req, res, next) => {
   const { email, password } = req.body;
@@ -61,4 +58,17 @@ export const getMyProfile = asyncError(async (req, res, next) => {
     success: true,
     user,
   });
+});
+
+export const getAllUsers = asyncError(async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
