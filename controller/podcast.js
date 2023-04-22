@@ -110,3 +110,13 @@ export const getPodcast = asyncError(async (req, res, next) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+export const getPodcasts = asyncError(async (req, res) => {
+  try {
+    const podcasts = await Podcast.find();
+    res.status(200).json({ success: true, podcasts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});

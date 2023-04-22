@@ -31,8 +31,12 @@ const schema = new mongoose.Schema({
     public_id: String,
     url: String,
   },
-  otp: Number,
-  otp_expire: Date,
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Podcast',
+    },
+  ],
 });
 
 schema.pre('save', async function (next) {
