@@ -1,6 +1,6 @@
 import { asyncError } from '../middlewares/error.js';
 import { Podcast } from '../models/podcast.js';
-import { User } from '../models/user.js';
+import { User } from '../models/User.js';
 import ErrorHandler from '../utils/error.js';
 import { cookieOptions, sendToken } from '../utils/features.js';
 
