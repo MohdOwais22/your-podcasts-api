@@ -13,8 +13,8 @@ export const sendToken = (user, res, message, statusCode) => {
     });
 };
 
-export const cookieOptions = {
-  secure: process.env.NODE_ENV === 'Development' ? false : true,
-  httpOnly: process.env.NODE_ENV === 'Development' ? false : true,
-  sameSite: process.env.NODE_ENV === 'Development' ? false : 'none',
-};
+// export const cookieOptions = {
+//   secure: process.env.NODE_ENV === 'Development' ? false : true,
+//   httpOnly: process.env.NODE_ENV === 'Development' ? false : true,
+//   sameSite: process.env.NODE_ENV === 'Development' ? false : 'none',
+// };

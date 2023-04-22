@@ -2,7 +2,7 @@ import { asyncError } from '../middlewares/error.js';
 import { Podcast } from '../models/podcast.js';
 import { User } from '../models/User.js';
 import ErrorHandler from '../utils/error.js';
-import { cookieOptions, sendToken } from '../utils/features.js';
+import { sendToken } from '../utils/features.js';
 
 export const login = asyncError(async (req, res, next) => {
   const { email, password } = req.body;
@@ -43,7 +43,7 @@ export const logOut = asyncError(async (req, res, next) => {
   res
     .status(200)
     .cookie('token', '', {
-      ...cookieOptions,
+      // ...cookieOptions,
       expires: new Date(Date.now()),
     })
     .json({
