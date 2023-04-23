@@ -85,7 +85,7 @@ export const popularPodcasts = asyncError(async (req, res, next) => {
       $sort: { popularity: -1 },
     },
     {
-      $limit: 10,
+      $limit: 5,
     },
   ]);
   res.json(popularPodcasts);
