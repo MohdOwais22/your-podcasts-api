@@ -1,6 +1,7 @@
 import { Podcast } from '../models/podcast.js';
 import cloudinary from 'cloudinary';
 import { asyncError } from '../middlewares/error.js';
+import fs from 'fs';
 
 export const getAllPodcasts = asyncError(async (req, res, next) => {
   const { keyword, category } = req.query;
@@ -20,35 +21,45 @@ export const getAllPodcasts = asyncError(async (req, res, next) => {
 
 export const uploadFile = asyncError(async (req, res, next) => {
   try {
-    // Get the file details from Cloudinary
-    const filePath = req.file.path;
-    const options = {
-      resource_type: req.body.resource_type,
-      public_id: req.body.public_id,
-    };
+    const { path } = req.file;
+    console.log(req.file);
+    console.log(req.file.originalname);
+    const filename = req.file.originalname.split('.')[0];
 
-    const result = await cloudinary.v2.uploader.upload(filePath, options);
+    const result = await cloudinary.v2.uploader.upload(path, {
+      resource_type: 'video',
+      public_id: filename,
+      chunk_size: 6000000,
+      eager: [
+        { width: 300, height: 300, crop: 'pad', audio_codec: 'none' },
+        {
+          width: 160,
+          height: 100,
+          crop: 'crop',
+          gravity: 'south',
+          audio_codec: 'none',
+        },
+      ],
+    });
 
-    // Return the public_id and url of the uploaded file
-    const { public_id, secure_url: url, resource_type } = result;
+    // Delete the file from the server
+    fs.unlinkSync(path);
 
-    // Create a new Podcast instance with the uploaded file details
-    const podcast = new Podcast({
+    // Create a new Podcast
+    const podcast = await Podcast.create({
       name: req.body.name,
       description: req.body.description,
       category: req.body.category,
-      type: resource_type,
+      type: req.body.type,
       speaker: req.body.speaker,
       file: {
-        public_id,
-        url,
+        url: result.secure_url,
+        public_id: result.public_id,
       },
     });
 
-    // Save the Podcast instance to the database
     await podcast.save();
 
-    // Send a success response with the Podcast data
     res.status(200).json(podcast);
   } catch (error) {
     console.error(error);

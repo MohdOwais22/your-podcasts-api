@@ -20,10 +20,10 @@ router.post("/new", signup);
 router.get("/me", isAuthenticated, getMyProfile);
 router.get("/logout", isAuthenticated, logOut);
 
-router.post("/favorites/:id", isAuthenticated, addToFavorites);
+router.put("/favorites/:id", addToFavorites);
 
-router.delete("/favorites/:id", isAuthenticated, removeFavorite);
+router.delete("/favorites/:id", removeFavorite);
 
-router.get("/favorites", isAuthenticated, getMyFavorites);
+router.get("/favorites", getMyFavorites);
 
 export default router;
