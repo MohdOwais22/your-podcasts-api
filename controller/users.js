@@ -76,8 +76,7 @@ export const getAllUsers = asyncError(async (req, res, next) => {
 
 
 
-export const addToFavorites = asyncError(async (req, res, next) => {
-// router.post('/favorites/:id', async (req, res) => {
+export const addToFavorites = asyncError(async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     const podcast = await Podcast.findById(req.params.id);
