@@ -1,10 +1,8 @@
 import { asyncError } from '../middlewares/error.js';
-import {User} from '../models/user.js';
+import { Podcast } from '../models/podcast.js';
+import { User } from '../models/User.js';
 import ErrorHandler from '../utils/error.js';
-import {
-    cookieOptions,
-    sendToken,
-  } from "../utils/features.js";
+import { sendToken } from '../utils/features.js';
 
 export const login = asyncError(async (req, res, next) => {
   const { email, password } = req.body;
@@ -45,7 +43,7 @@ export const logOut = asyncError(async (req, res, next) => {
   res
     .status(200)
     .cookie('token', '', {
-      ...cookieOptions,
+      // ...cookieOptions,
       expires: new Date(Date.now()),
     })
     .json({
@@ -61,4 +59,77 @@ export const getMyProfile = asyncError(async (req, res, next) => {
     success: true,
     user,
   });
+});
+
+export const getAllUsers = asyncError(async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+
+
+export const addToFavorites = asyncError(async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const podcast = await Podcast.findById(req.params.id);
+
+    if (!podcast) {
+      return res.status(404).json({ message: 'Podcast not found' });
+    }
+
+    if (user.favorites.includes(podcast._id)) {
+      return res.status(400).json({ message: 'Podcast already in favorites' });
+    }
+
+    user.favorites.push(podcast._id);
+    await user.save();
+
+    res.status(200).json({ message: 'Podcast added to favorites' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+export const removeFavorite = asyncError(async (req, res, next) => {
+// router.delete('/favorites/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const podcast = await Podcast.findById(req.params.id);
+
+    if (!podcast) {
+      return res.status(404).json({ message: 'Podcast not found' });
+    }
+
+    if (!user.favorites.includes(podcast._id)) {
+      return res.status(400).json({ message: 'Podcast not in favorites' });
+    }
+
+    user.favorites = user.favorites.filter(id => id.toString() !== podcast._id.toString());
+    await user.save();
+
+    res.status(200).json({ message: 'Podcast removed from favorites' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+export const getMyFavorites = asyncError(async (req, res, next) => {
+// router.get('/favorites', async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('favorites');
+    res.status(200).json(user.favorites);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
