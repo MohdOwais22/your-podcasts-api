@@ -2,6 +2,8 @@
 
 # Deployed Link https://your-podcast-api.onrender.com/
 
+frontend repo link https://github.com/MohdOwais22/your-podcast-frontend
+
 The project is made with expressjs and uses mongodb for database
 
 Steps to run this app on your localhost
