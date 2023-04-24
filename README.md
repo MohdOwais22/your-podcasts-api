@@ -1,7 +1,5 @@
 # your-podcasts-api
 
-# your-podcasts-api
-
 # Deployed Link https://your-podcast-api.onrender.com/
 
 frontend repo link https://github.com/MohdOwais22/your-podcast-frontend
